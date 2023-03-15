@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "221013049569",
+    "project_id": "dr-autism",
+    "storage_bucket": "dr-autism.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:221013049569:android:d5b21bf2434d72b37cb7a0",
+        "android_client_info": {
+          "package_name": "com.autism1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "221013049569-0bttgp1jj822r214u8e564am342bsdja.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA77A6ehmxMYacv_hVyWHdKg-FNGmTamzk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "221013049569-0bttgp1jj822r214u8e564am342bsdja.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

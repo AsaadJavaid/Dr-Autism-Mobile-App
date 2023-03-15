@@ -1,0 +1,7 @@
+Auth stack (folder)
+ welcome route
+ login route
+ signup route
+
+appstack (folder)
+rest of the routes
