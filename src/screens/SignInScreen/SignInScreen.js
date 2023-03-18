@@ -34,7 +34,7 @@ const SignInScreen = ({navigation}) => {
     //     setLoding(false);
     // }
 
-    const [username, setUsername] = useState('asaadhabib449@gmail.com');
+    const [username, setUsername] = useState('asaad@gmail.com');
   const [password, setPassword] = useState('khan1234');
   const [emailError, setEmailError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
@@ -82,7 +82,7 @@ const SignInScreen = ({navigation}) => {
               else
               {
                 // const varified = documentSnapshot.data().isVarified
-                navigation.navigate('Welcome');
+                navigation.navigate('Chat');
                 // if (isVarified)
                 // {
                 // navigation.navigate('Welcome');
@@ -194,6 +194,7 @@ const SignInScreen = ({navigation}) => {
 
             <View style = {styles.root}>
                 <CustomButton text = "Sign In with Google" onPress = {onSignInWithGooglePressed} btnBorder = "#DD4D44" bgColor = "#FAFAFA" fgColor = "#DD4D44" />
+                
             </View>
 
             <View style = {styles.root}>

@@ -17,6 +17,7 @@ import Detection from '../screens/Detection/Detection';
 import auth, { firebase } from '@react-native-firebase/auth';
 const Stack = createNativeStackNavigator();
 import { useNavigation } from '@react-navigation/native'
+import ChatScreen from '../screens/Chat';
 
 
 const Navigation = () => {
@@ -54,14 +55,16 @@ const Navigation = () => {
             </View>
         )
     }
-    const userValidated = firebase.auth().currentUser
+    const userValidated = auth().currentUser
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName = {userValidated ? "Home" : "Welcome"} >
+
         
         <Stack.Screen name='Welcome' component={WelcomeScreen} />
         <Stack.Screen name='SignIn' component={SignInScreen} />
         <Stack.Screen name='Home' component={HomeScreen} />
+        <Stack.Screen name='Chat' component={ChatScreen} />
         <Stack.Screen name='Profile' component={Profile} />
         <Stack.Screen name='Detection' component={Detection} />
 
@@ -76,6 +79,8 @@ const Navigation = () => {
 
 
 export default Navigation
+
+
 
 {/* <Stack.Navigator screenOptions={{headerShown : false}}>
             {user ? (

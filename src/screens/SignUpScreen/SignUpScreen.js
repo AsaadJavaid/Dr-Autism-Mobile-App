@@ -57,6 +57,8 @@ const SignUpScreen = () => {
 
         // const { email, password, passwordRepeat, username, role } = values
         if (password == passwordRepeat) {
+            const avatar = "" + Math.floor(Math.random()*3)
+            console.log("print " + avatar)
         await auth()
             .createUserWithEmailAndPassword(email, password)
             .then(() => {
@@ -66,8 +68,16 @@ const SignUpScreen = () => {
                     email,
                     password,
                     role,
+                    avatar,
                     // isVarified : false
                 })
+                const update = {
+                    displayName: username,
+                    photoURL: "https://firebasestorage.googleapis.com/v0/b/dr-autism.appspot.com/o/Avatar%2F"+ avatar + ".jpg?alt=media",
+                  };
+                  
+                   auth().currentUser.updateProfile(update)
+                   
                 navigation.navigate('SignIn')
             })
             .catch(error => {
@@ -97,13 +107,13 @@ const SignUpScreen = () => {
     
         if (usernameIsValid && emailIsValid && passwordIsValid && passwordRepeatIsValid) {
           await register();
-          const data = await firestore().collection('users').doc(auth().currentUser.uid).set({
-            uid : auth().currentUser.uid,
-            username: username,
-            email: email,
-            password: password,
-            role: role,
-          })
+        //   const data = await firestore().collection('users').doc(auth().currentUser.uid).set({
+        //     uid : auth().currentUser.uid,
+        //     username: username,
+        //     email: email,
+        //     password: password,
+        //     role: role,
+        //   })
     
           if (data) {
             return;
