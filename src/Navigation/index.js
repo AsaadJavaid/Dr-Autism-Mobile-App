@@ -18,6 +18,16 @@ import auth, { firebase } from '@react-native-firebase/auth';
 const Stack = createNativeStackNavigator();
 import { useNavigation } from '@react-navigation/native'
 import ChatScreen from '../screens/Chat';
+import DoctorHome from '../screens/DoctorHome';
+import DoctorDesk from '../screens/DoctorDesk';
+import EmotionEducation from '../screens/EmotionEducation/EmotionEducation';
+import AngryEmotionScreen from '../screens/EmotionEducation/Angry/AngryEmotionScreen';
+import MixEmotionScreen from '../screens/EmotionEducation/ChitChat/MixEmotionScreen';
+import DisgustEmotionScreen from '../screens/EmotionEducation/Disgust/DisgustEmotionScreen';
+import FearEmotionScreen from '../screens/EmotionEducation/Fear/FearEmotionScreen';
+import HappyEmotionScreen from '../screens/EmotionEducation/Happy/HappyEmotionScreen';
+import SadEmotionScreen from '../screens/EmotionEducation/Sad/SadEmotionScreen';
+import GamesScreen from '../screens/Games/GamesScreen';
 
 
 const Navigation = () => {
@@ -72,6 +82,16 @@ const Navigation = () => {
         <Stack.Screen name='ConfirmEmail' component={ConfirmEmailScreen} />
         <Stack.Screen name='ForgotPassword' component={ForgotPasswordScreen} />
         <Stack.Screen name='NewPaswword' component={NewPasswordScreen} />
+        <Stack.Screen name='DoctorHome' component={DoctorHome} />
+        <Stack.Screen name='DoctorDesk' component={DoctorDesk} />
+        <Stack.Screen name='EmotionEducation' component={EmotionEducation} />
+        <Stack.Screen name='AngryEmotionScreen' component={AngryEmotionScreen} />
+        <Stack.Screen name='MixEmotionScreen' component={MixEmotionScreen} />
+        <Stack.Screen name='DisgustEmotionScreen' component={DisgustEmotionScreen} />
+        <Stack.Screen name='FearEmotionScreen' component={FearEmotionScreen} />
+        <Stack.Screen name='HappyEmotionScreen' component={HappyEmotionScreen} />
+        <Stack.Screen name='SadEmotionScreen' component={SadEmotionScreen} />
+        <Stack.Screen name='GamesScreen' component={GamesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   )

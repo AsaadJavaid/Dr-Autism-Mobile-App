@@ -252,10 +252,10 @@ const styles = StyleSheet.create({
 
         color: '#02AABD',
         width: "80%",
-        fontSize: 16
+        fontSize: 17
     },
     spacing: {
-        height: "50%",
+        height: "45%",
         width: "100%",
         justifyContent: 'center',
         alignItems: 'center',

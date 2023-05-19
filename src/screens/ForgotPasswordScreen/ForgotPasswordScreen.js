@@ -1,4 +1,4 @@
-import { View, Text, TextInput, StyleSheet, ScrollView, Pressable, Alert } from 'react-native'
+import { View, Text,Image, TextInput, StyleSheet, ScrollView,useWindowDimensions, Pressable, Alert } from 'react-native'
 import React, { useState } from 'react'
 import CustomInput from '../../components/CustomInput'
 import CustomButton from '../../components/CustomButton'
@@ -6,11 +6,13 @@ import { useNavigation } from '@react-navigation/native'
 import { useForm } from 'react-hook-form'
 import { Auth } from "aws-amplify";
 import auth from '@react-native-firebase/auth';
+import Image1 from "../../../assets/images/image5.png"
 
 
 // const Email_Regex =  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 const EMAIL_REGEX = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-const ForgotPasswordScreen = ({navigation}) => {
+const ForgotPasswordScreen = ({ navigation }) => {
+    const { height } = useWindowDimensions();
     const [loding, setLoding] = useState(false);
     const { control, handleSubmit, formState: { errors } } = useForm();
     // const navigation = useNavigation();
@@ -52,6 +54,14 @@ const ForgotPasswordScreen = ({navigation}) => {
         <ScrollView style={{ backgroundColor: "white" }}>
             <View>
                 <View style={styles.root}>
+                    <Image
+                        source={Image1}
+                        style={[styles.Logo, { height: height * 0.4 }]}
+                        resizeMode="center">
+                    </Image>
+                </View>
+
+                <View style={styles.root}>
                     <Text style={styles.title}>Reset password</Text>
                 </View>
 
@@ -69,13 +79,13 @@ const ForgotPasswordScreen = ({navigation}) => {
                         value={email}
                         onChangeText={setEmail}
                         placeholder="Enter your email"
-                        placeholderTextColor={'black'}
+                        placeholderTextColor={'#16B3C0'}
                         style={styles.input}
                         secureTextEntry={false}
                     />
                 </View>
                 {emailError.isError ? (
-                    <Text style={[styles.errorText, { color: 'red' }]}>{emailError.message}</Text>
+                    <Text style={[styles.errorText, { color: 'red', paddingHorizontal : 25 }]}>{emailError.message}</Text>
                 ) : null}
                 <View style={styles.root}>
                     <CustomButton text={loding ? "Loading..." : "Send"} onPress={handleSubmit(onSendPressed)} />
@@ -130,7 +140,21 @@ const styles = StyleSheet.create({
         width: "90%",
         alignItems: "center",
         marginVertical: 10
-    }
+    },
+    input: {
+
+        color: '#16B3C0',
+        width: "90%",
+        fontSize: 15,
+        borderWidth: 1,
+        padding: 10,
+        margin: 10,
+        backgroundColor: "white",
+        borderRadius: 15,
+        paddingLeft: 50,
+        backgroundColor: "#FFFFFF",
+        borderColor: "#16B3C0",
+    },
 })
 
 export default ForgotPasswordScreen;
