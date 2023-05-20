@@ -1,25 +1,32 @@
-import { View, Text, Pressable, StyleSheet, ScrollView, ImageBackground, TouchableOpacity, Alert } from 'react-native'
-import React from 'react'
+import React from 'react';
+import { View, Text, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
-const Detection = () => {
-    const fileUpload = () => {
-        Alert.alert("Upload File")
-    }
+const Detection = ({navigation}) => {
+  const openCamera = () => {
+    Alert.alert("Open Camera")
+  }
+
   return (
-    <ScrollView style = {{backgroundColor : "#D6EFED"}}>
-        <View style = {{flex : 1, alignItems : "center"}}>
-            <ImageBackground source= {require('../../../assets/images/main/imageDET.webp')} style ={{height : 200, width : "100%"}}/>
-        </View>
-        <View style = {{alignItems : "center", marginTop : 30}}>
-            <TouchableOpacity onPress = {fileUpload}>
-                <View style = {{height : 200, width : 165, backgroundColor : "yellow", borderRadius: 20, alignItems : "center", marginBottom : 30}}>
-                <ImageBackground source= {require('../../../assets/images/highlight/detection.webp')} style ={{height : 200, width : 165}} imageStyle = {{borderRadius : 20}}/>
-                <Text style = {{fontSize : 20, fontWeight : "bold", color : "#16B3C0"}}>Upload-File</Text>
-                </View>
-          </TouchableOpacity>
-        </View>
-    </ScrollView>
-  )
-}
+    <View style={styles.container}>
+      <TouchableOpacity onPress={openCamera}>
+        <Text>Upload Image</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
-export default Detection
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+});
+
+export default Detection;

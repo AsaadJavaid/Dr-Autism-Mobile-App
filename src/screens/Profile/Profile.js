@@ -9,6 +9,7 @@ import {
     TextInput,
     TouchableOpacity,
     Button,
+    Image,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -28,7 +29,9 @@ const Profile = function ({ navigation }) {
     const [press1, setPress1] = useState(true);
     const [press2, setPress2] = useState(true);
     const [loding, setLoding] = useState(false);
-    const {control, handleSubmit, watch} = useForm();
+    const { control, handleSubmit, watch } = useForm();
+    const [avatar, setAvatar] = useState("1");
+    const [oldPassword, seOldPassword] = useState("");
 
 
     // useEffect(() => {
@@ -47,25 +50,29 @@ const Profile = function ({ navigation }) {
 
     useEffect(() => {
         if (auth().currentUser) {
-          setEmail(auth().currentUser.email);
-          firestore()
-            .collection('users')
-            .doc(auth().currentUser.uid)
-            .get()
-            .then(documentSnapshot => {
-              if (documentSnapshot.exists) {
-                setName(documentSnapshot.data().username);
-                setPassword(documentSnapshot.data().password);
-              }
-            });
+            setEmail(auth().currentUser.email);
+            firestore()
+                .collection('users')
+                .doc(auth().currentUser.uid)
+                .get()
+                .then(documentSnapshot => {
+                    if (documentSnapshot.exists) {
+                        console.log(documentSnapshot.data())
+                        setName(documentSnapshot.data().username);
+                        seOldPassword(documentSnapshot.data().password);
+                        console.log("checking")
+                        setAvatar(documentSnapshot.data().avatar);
+                        console.log("checking")
+                    }
+                });
         }
-      }, [update]);
+    }, [update]);
 
     const onSignOutPressed = () => {
         auth()
             .signOut()
             .then(() => {
-                alert("Signed out already!!!")
+                alert("Signed out Successfully!!!")
                 navigation.navigate('SignIn')
             })
             .catch(error => {
@@ -75,20 +82,51 @@ const Profile = function ({ navigation }) {
             });
     }
 
+    const reauthenticate = (currentPassword) => {
+        var user = auth().currentUser;
+        var cred = auth.EmailAuthProvider.credential(
+            user.email, currentPassword);
+        return user.reauthenticateWithCredential(cred);
+    }
+    const changePassword = (currentPassword, newPassword) => {
+        reauthenticate(currentPassword).then(() => {
+            var user = auth().currentUser;
+            user.updatePassword(newPassword).then(() => {
+                console.log("Password updated!");
+                seOldPassword(newPassword)
+                firestore().collection('users')
+                    .doc(auth().currentUser.uid).update({ password: newPassword })
+            })
+                .catch((error) => { console.log(error); });
+        }).catch((error) => { console.log(error); });
+    }
+    const changeEmail = async (currentPassword, newEmail) => {
+        reauthenticate(currentPassword).then(() => {
+            var user = auth().currentUser;
+            user.updateEmail(newEmail).then(() => {
+                console.log("Email updated!");
+                firestore().collection('users')
+                    .doc(auth().currentUser.uid).update({ email: Email })
+            })
+                .catch((error) => { console.log(error); });
+        }).catch((error) => { console.log(error); });
+    }
+
     return (
         <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#ffffff', '#ffffff']} style={styles.linearGradient1}>
 
-            <SafeAreaView style={styles.root1}>
+            <SafeAreaView>
                 <StatusBar />
                 <ScrollView>
+
                     <View style={styles.root}>
                         <View style={styles.spacing}>
-                            <TouchableOpacity>
-                                <MaterialIcons name="person" size={150} color="#02AABD" />
+                            <Image style={{ height: 200, width: 200, borderRadius: 100, borderColor: "#16B3C0", borderWidth: 2 }} source={{ uri: auth().currentUser.photoURL }} />
 
-                            </TouchableOpacity>
                         </View>
                         <View style={styles.container}>
+
+
                             <TextInput
                                 value={Email}
                                 onChangeText={setEmail}
@@ -98,8 +136,8 @@ const Profile = function ({ navigation }) {
                             />
                             <TouchableOpacity ><MaterialIcons name={press ? 'edit' : 'done'} style={styles.edit1} size={20} color="#02AABD"
                                 onPress={async () => {
-                                    setPress(!press); await auth().currentUser.updateEmail(Email); await firestore().collection('users')
-                                        .doc(auth().currentUser.uid).update({ email: Email })
+                                    await changeEmail(oldPassword, Email)
+                                    // setPress(!press); 
                                 }} />
                             </TouchableOpacity>
                         </View>
@@ -121,26 +159,45 @@ const Profile = function ({ navigation }) {
 
                         </View>
 
+
+                        {/* <View style={styles.container}>
+                            <TextInput
+                                value={oldPassword}
+                                onChangeText={seOldPassword}
+                                placeholder="Old Password"
+                                placeholderTextColor={'#02AABD'}
+                                style={styles.input}
+                                secureTextEntry={true}
+                            />
+                        </View> */}
+
                         <View style={styles.container}>
                             <TextInput
                                 value={Password}
                                 onChangeText={setPassword}
-                                placeholder="Password"
+                                placeholder="New Password"
                                 placeholderTextColor={'#02AABD'}
                                 style={styles.input}
                                 secureTextEntry={true}
                             />
                             <TouchableOpacity ><MaterialIcons name={press2 ? 'edit' : 'done'} style={styles.edit1} size={20} color="#02AABD"
                                 onPress={async () => {
-                                    setPress(!press); await firestore().collection('users')
-                                        .doc(auth().currentUser.uid).update({ password: Password })
+                                    changePassword(oldPassword, Password)
                                 }} />
                             </TouchableOpacity>
                         </View>
 
-                        <View style = {styles.root1}>
-                            <CustomButton text = {loding ? "Loading..." : "Sign Out"} onPress = {handleSubmit(onSignOutPressed)} />
+                        <View style={styles.logOutButtonView} >
+                            {/* <CustomButton text = {loding ? "Loading..." : "Sign Out"} onPress = {handleSubmit(onSignOutPressed)} />
+                             */}
+
+                            <CustomButton text="LogOut" onPress={handleSubmit(onSignOutPressed)} btnBorder="#DD4D44" bgColor="#FAFAFA" fgColor="#DD4D44" />
                         </View>
+
+                        {/* <View style= {styles.logOutButtonView}>
+                            <Button title='LogOut' onPress={handleSubmit(onSignOutPressed)} style= {styles.logOutButton}></Button>
+                        </View> */}
+
                     </View>
                 </ScrollView>
 
@@ -153,29 +210,31 @@ const styles = StyleSheet.create({
 
     root: {
         alignItems: 'center',
-        marginTop: '5%',
-        marginLeft: '4%',
-        marginRight: '4%',
+        marginBottom: "20%"
 
     },
-    root1: {
-        alignItems : "center",
-    },
+    // logOutButton:{
+    //     color : "black"
 
-    root1: {
-        flex: 1,
-
+    // },
+    logOutButtonView: {
+        borderRadius: 20,
+        borderWidth: 0,
+        height: 70,
+        alignContent: "center",
+        alignItems: "center",
+        width: "80%"
     },
 
     container: {
-        backgroundColor: 'white',
-        width: '100%',
-        height: '18%',
+        backgroundColor: '#EDEDED',
+        paddingLeft: "5%",
+        paddingRight: "5%",
+        width: '80%',
         borderColor: '#02AABD',
-        borderWidth: 3,
-        borderRadius: 15,
+        borderRadius: 10,
         paddingHorizontal: 10,
-        marginVertical: 5,
+        marginVertical: 10,
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
@@ -192,18 +251,18 @@ const styles = StyleSheet.create({
     input: {
 
         color: '#02AABD',
+        width: "80%",
+        fontSize: 17
     },
     spacing: {
-        height: 170,
-        width: 170,
+        height: "45%",
+        width: "100%",
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'transparent',
-        borderRadius: 100,
-        paddingBottom: 10,
-        marginBottom: 15,
-        borderWidth: 3,
-        borderColor: '#02AABD',
+        borderBottomLeftRadius: 120,
+        borderBottomRightRadius: 120,
+        marginBottom: 30,
+        backgroundColor: '#16B3C0'
 
     },
     linearGradient1: {
