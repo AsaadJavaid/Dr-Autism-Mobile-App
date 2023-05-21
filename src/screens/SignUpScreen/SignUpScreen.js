@@ -37,6 +37,7 @@ const SignUpScreen = () => {
     const [passwordRepeat, setPasswordRepeat] = useState('');
     const [passwordRepeatValid, setPasswordRepeatValid] = useState(true);
     const [role, setRole] = useState('');
+    const [fee, setFee] = useState('');
 
     const handleRoleChange = (value) => {
         setRole(value.label);
@@ -57,6 +58,7 @@ const SignUpScreen = () => {
         if (password == passwordRepeat) {
             const avatar = "" + Math.floor(Math.random() * 18)
             console.log("print " + avatar)
+            if (role=='Parent'){
             await auth()
                 .createUserWithEmailAndPassword(email, password)
                 .then(() => {
@@ -75,16 +77,45 @@ const SignUpScreen = () => {
                     };
 
                     auth().currentUser.updateProfile(update)
-
+                    Alert.alert("Success  ✅", "Account created SUCCESSFULLY!!!");
                     navigation.navigate('SignIn')
                 })
                 .catch(error => {
                     if (error) {
-                        Alert.alert("Email already in use", error.message)
+                        Alert.alert("☠ ●●ρs ☠", "Email Already in Use", e.message);
                     }
                 });
+            } else{await auth()
+                .createUserWithEmailAndPassword(email, password)
+                .then(() => {
+                    firestore().collection('users').doc(auth().currentUser.uid).set({
+                        uid: auth().currentUser.uid,
+                        username,
+                        email,
+                        password,
+                        role,
+                        fee,
+                        avatar,
+                        // isVarified : false
+                    })
+                    const update = {
+                        displayName: username,
+                        photoURL: "https://firebasestorage.googleapis.com/v0/b/dr-autism.appspot.com/o/Avatar%2F" + avatar + ".jpg?alt=media",
+                    };
+
+                    auth().currentUser.updateProfile(update)
+                    Alert.alert("Success  ✅", "Account created SUCCESSFULLY!!!");
+                    navigation.navigate('SignIn')
+                })
+                .catch(error => {
+                    if (error) {
+                        Alert.alert("☠ ●●ρs ☠", "Email Already in Use", e.message);
+                    }
+                });
+
+            }
         } else {
-            alert("passwords are not same");
+            Alert.alert("☠ ●●ρs ☠", "Passwords are not Same");
         }
     }
 
@@ -187,6 +218,20 @@ const SignUpScreen = () => {
                     </View>
 
                     {!passwordRepeatValid && <Text style={styles.error}>Please retype the password correctly</Text>}
+
+                    {role == "Doctor" ? (
+                    <View style={styles.root}>
+                        <TextInput
+                            value={fee}
+                            onChangeText={setFee}
+                            placeholder="Fees"
+                            placeholderTextColor={'#16B3C0'}
+                            style={styles.input}
+                        />
+                    </View>): (<></>)
+                    }
+                    
+
 
                     <RadioButtonRN
                         data={data}

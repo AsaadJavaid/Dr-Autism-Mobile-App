@@ -43,7 +43,7 @@ const HomeScreen = ({ navigation }) => {
     console.log("First Touchable opacity")
   }
   const doctorDesk = () => {
-    navigation.navigate("DoctorDesk")
+    navigation.navigate("UserAppointment")
   }
   const profilePress = () => {
     navigation.navigate("Profile")

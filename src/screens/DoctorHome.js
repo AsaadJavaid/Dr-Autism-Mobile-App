@@ -35,8 +35,8 @@ const DoctorHome = ({ navigation }) => {
   const profilePress = () => {
     navigation.navigate("Profile")
   }
-  const detectionPage = () => {
-    navigation.navigate("Detection")
+  const appointmentRequest = () => {
+    navigation.navigate("AppointmentRequest")
   }
   const discussionPanel = () => {
     navigation.navigate("Chat")
@@ -97,7 +97,7 @@ const DoctorHome = ({ navigation }) => {
         </ScrollView>
 
         <View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 20 }}>
-          <TouchableOpacity onPress={detectionPage}>
+          <TouchableOpacity onPress={appointmentRequest}>
             <View style={{ height: 200, width: 165, backgroundColor: "yellow", borderRadius: 20, alignItems: "center", marginBottom: 30 }}>
               <ImageBackground source={require('../../assets/images/highlight/appointment.jpg')} style={{ height: 200, width: 165 }} imageStyle={{ borderRadius: 20 }} />
               <Text style={{ fontSize: 20, fontWeight: "bold", color: "#16B3C0" }}>Appointments</Text>

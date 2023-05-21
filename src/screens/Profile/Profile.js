@@ -10,6 +10,7 @@ import {
     TouchableOpacity,
     Button,
     Image,
+    Alert,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -72,12 +73,12 @@ const Profile = function ({ navigation }) {
         auth()
             .signOut()
             .then(() => {
-                alert("Signed out Successfully!!!")
+                Alert.alert("Success  ✅", "Signed out SUCCESSFULLY!!!");
                 navigation.navigate('SignIn')
             })
             .catch(error => {
                 if (error) {
-                    alert("Wrong input", error.message)
+                    Alert.alert("☠ ●●ρs ☠", "Wrong input", error.message);
                 }
             });
     }
@@ -93,6 +94,7 @@ const Profile = function ({ navigation }) {
             var user = auth().currentUser;
             user.updatePassword(newPassword).then(() => {
                 console.log("Password updated!");
+                Alert.alert("Success  ✅", "Password updated SUCCESSFULLY!!!");
                 seOldPassword(newPassword)
                 firestore().collection('users')
                     .doc(auth().currentUser.uid).update({ password: newPassword })
@@ -105,6 +107,7 @@ const Profile = function ({ navigation }) {
             var user = auth().currentUser;
             user.updateEmail(newEmail).then(() => {
                 console.log("Email updated!");
+                Alert.alert("Success  ✅", "Email updated SUCCESSFULLY!!!");
                 firestore().collection('users')
                     .doc(auth().currentUser.uid).update({ email: Email })
             })
@@ -114,19 +117,15 @@ const Profile = function ({ navigation }) {
 
     return (
         <LinearGradient start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} colors={['#ffffff', '#ffffff']} style={styles.linearGradient1}>
-
             <SafeAreaView>
                 <StatusBar />
                 <ScrollView>
-
                     <View style={styles.root}>
                         <View style={styles.spacing}>
-                            <Image style={{ height: 200, width: 200, borderRadius: 100, borderColor: "#16B3C0", borderWidth: 2 }} source={{ uri: auth().currentUser.photoURL }} />
-
+                            <Image style={{ height: 200, width: 200, borderRadius: 50, borderColor: "#16B3C0", borderWidth: 2 }} source={{ uri: auth().currentUser.photoURL }} />
                         </View>
+
                         <View style={styles.container}>
-
-
                             <TextInput
                                 value={Email}
                                 onChangeText={setEmail}
@@ -155,21 +154,7 @@ const Profile = function ({ navigation }) {
                                         .doc(auth().currentUser.uid).update({ username: Name })
                                 }} />
                             </TouchableOpacity>
-
-
                         </View>
-
-
-                        {/* <View style={styles.container}>
-                            <TextInput
-                                value={oldPassword}
-                                onChangeText={seOldPassword}
-                                placeholder="Old Password"
-                                placeholderTextColor={'#02AABD'}
-                                style={styles.input}
-                                secureTextEntry={true}
-                            />
-                        </View> */}
 
                         <View style={styles.container}>
                             <TextInput
@@ -193,10 +178,6 @@ const Profile = function ({ navigation }) {
 
                             <CustomButton text="LogOut" onPress={handleSubmit(onSignOutPressed)} btnBorder="#DD4D44" bgColor="#FAFAFA" fgColor="#DD4D44" />
                         </View>
-
-                        {/* <View style= {styles.logOutButtonView}>
-                            <Button title='LogOut' onPress={handleSubmit(onSignOutPressed)} style= {styles.logOutButton}></Button>
-                        </View> */}
 
                     </View>
                 </ScrollView>
@@ -259,8 +240,8 @@ const styles = StyleSheet.create({
         width: "100%",
         justifyContent: 'center',
         alignItems: 'center',
-        borderBottomLeftRadius: 120,
-        borderBottomRightRadius: 120,
+        borderBottomLeftRadius: 50,
+        borderBottomRightRadius: 50,
         marginBottom: 30,
         backgroundColor: '#16B3C0'
 

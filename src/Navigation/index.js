@@ -28,6 +28,10 @@ import FearEmotionScreen from '../screens/EmotionEducation/Fear/FearEmotionScree
 import HappyEmotionScreen from '../screens/EmotionEducation/Happy/HappyEmotionScreen';
 import SadEmotionScreen from '../screens/EmotionEducation/Sad/SadEmotionScreen';
 import GamesScreen from '../screens/Games/GamesScreen';
+import UserAppointment from '../screens/UserAppointment/UserAppointment'
+import BookAppointment from '../screens/UserAppointment/BookAppointment'
+import AppointmentRequest from '../screens/DoctorAppointment/AppointmentRequest';
+import UserContext from '../Context/UserContext';
 
 
 const Navigation = () => {
@@ -38,8 +42,11 @@ const Navigation = () => {
           const authUser = await auth().setPersistence(auth.Auth.Persistence.LOCAL).then(() => {
             return auth().currentUser;
           });
+          console.log("setting User")
           setUser(authUser);
+          
         } catch (e) {
+          console.log(e)
           setUser(null);
         }
       };
@@ -66,7 +73,10 @@ const Navigation = () => {
         )
     }
     const userValidated = auth().currentUser
+    console.log("user validated is ", userValidated)
+    console.log("user ",user)
   return (
+    <UserContext.Provider value={{user, setUser}}>
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName = {userValidated ? "Home" : "Welcome"} >
 
@@ -92,8 +102,12 @@ const Navigation = () => {
         <Stack.Screen name='HappyEmotionScreen' component={HappyEmotionScreen} />
         <Stack.Screen name='SadEmotionScreen' component={SadEmotionScreen} />
         <Stack.Screen name='GamesScreen' component={GamesScreen} />
+        <Stack.Screen name='UserAppointment' component={UserAppointment} />
+        <Stack.Screen name='Book Appointment' component={BookAppointment} />
+        <Stack.Screen name='AppointmentRequest' component={AppointmentRequest} />
       </Stack.Navigator>
     </NavigationContainer>
+    </UserContext.Provider>
   )
 }
 

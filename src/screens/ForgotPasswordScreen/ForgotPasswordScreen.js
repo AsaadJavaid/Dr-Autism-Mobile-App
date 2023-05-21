@@ -34,10 +34,12 @@ const ForgotPasswordScreen = ({ navigation }) => {
         auth()
             .sendPasswordResetEmail(email)
             .then(() => {
+                Alert.alert("Success  ✅", "Check your Email, Code Send there!!!");
                 navigation.replace('SignIn');
             })
             .catch(error => {
                 console.log(error);
+                Alert.alert("☠ ●●ρs ☠", "Error!!!", e.message);
             });
     };
     const onSendPressed = function () {

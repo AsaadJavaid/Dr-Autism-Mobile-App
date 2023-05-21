@@ -8,12 +8,15 @@ import { useForm } from 'react-hook-form'
 import { Auth } from 'aws-amplify';
 import auth, { firebase } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import UserContext from '../../Context/UserContext'
+import {useContext} from "react";
 
 
 // const Email_Regex =  /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
 const SignInScreen = ({ navigation }) => {
     const { height } = useWindowDimensions();
+    const {setUser} = useContext(UserContext)
     // const navigation = useNavigation();
     const [loding, setLoding] = useState(false);
 
@@ -34,7 +37,7 @@ const SignInScreen = ({ navigation }) => {
     //     setLoding(false);
     // }
 
-    const [username, setUsername] = useState('asaad@gmail.com');
+    const [username, setUsername] = useState('asaadhabib449@gmail.com');
     const [password, setPassword] = useState('khan1234');
     const [emailError, setEmailError] = useState(null);
     const [passwordError, setPasswordError] = useState(null);
@@ -53,7 +56,7 @@ const SignInScreen = ({ navigation }) => {
 
         if (!PASSWORD_REGEX.test(password)) {
             passwordValidationError =
-                'Please enter a valid Password';
+                'Password should be 8 characters';
         }
 
         setEmailError(emailValidationError);
@@ -73,8 +76,10 @@ const SignInScreen = ({ navigation }) => {
                     .get()
                     .then(documentSnapshot => {
                         if (documentSnapshot.exists) {
-                            const userRole = documentSnapshot.data().role
-                            console.log(documentSnapshot.data().role)
+                            const userData = documentSnapshot.data()
+                            const userRole = userData.role
+                            console.log(userData.role)
+                            setUser({...auth().currentUser, ...userData})
                             if (userRole == "Parent") {
                                 navigation.navigate('Home');
                             }
@@ -120,16 +125,32 @@ const SignInScreen = ({ navigation }) => {
 
     return (
         <ScrollView style={{ backgroundColor: "#FFFFFF" }}>
-            <View>
-                <View style={styles.root}>
-                    <View style={styles.logoBack}>
-                        <Image
-                            source={Logo2}
-                            style={[styles.Logo, { height: height * 0.4 }]}
-                            resizeMode="center">
-                        </Image>
-                    </View>
+            <View style={styles.root}>
+                <View style={styles.logoBack}>
+                    <Image
+                        source={Logo2}
+                        style={[styles.Logo, { height: height * 0.4 }]}
+                        resizeMode="center">
+                    </Image>
                 </View>
+            </View>
+            <View style={{
+                backgroundColor: '#FAF7F0',
+                margin: 10,
+                marginBottom: 100,
+                paddingBottom: 20,
+                paddingTop: 30,
+                borderRadius: 50,
+                shadowColor: "black",
+                shadowOffset: {
+                  width: 0,
+                  height: 10,
+                },
+                shadowOpacity: 0.5,
+                shadowRadius: 20,
+                elevation: 10,
+            }}>
+
 
                 <View style={styles.root}>
                     <TextInput
@@ -213,8 +234,9 @@ const styles = StyleSheet.create({
         alignContent: "center",
     },
     Logo: {
-        marginVertical: 0,
+        marginVertical: -30,
         backgroundColor: "#FFFFFF",
+        marginBottom: -50
     },
     text: {
         color: "black",
@@ -229,7 +251,7 @@ const styles = StyleSheet.create({
         color: 'red',
         fontSize: 12,
         marginVertical: 5,
-        paddingHorizontal : 100
+        paddingHorizontal: 100
     },
     input: {
 
