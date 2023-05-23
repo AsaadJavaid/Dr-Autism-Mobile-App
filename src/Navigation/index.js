@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useReducer } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import SignInScreen from '../screens/SignInScreen';
@@ -31,82 +31,131 @@ import GamesScreen from '../screens/Games/GamesScreen';
 import UserAppointment from '../screens/UserAppointment/UserAppointment'
 import BookAppointment from '../screens/UserAppointment/BookAppointment'
 import AppointmentRequest from '../screens/DoctorAppointment/AppointmentRequest';
+import { VideoCall } from "../screens/DoctorAppointment/VideoCall"
 import UserContext from '../Context/UserContext';
+import firestore from "@react-native-firebase/firestore";
+import AppStack from './AppStack';
+import VideoStack from './VideoStack';
 
 
 const Navigation = () => {
-    const [user, setUser] = useState(undefined);
+  const [user, setUser] = useState(undefined);
+  const [getting, setGetting] = useState(null);
+  const [caller, setCaller] = useState();
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [userValidated, setUserValidated] = useState(null)
 
-    const checkUser = async () => {
-        try {
-          const authUser = await auth().setPersistence(auth.Auth.Persistence.LOCAL).then(() => {
-            return auth().currentUser;
-          });
-          console.log("setting User")
-          setUser(authUser);
-          
-        } catch (e) {
-          console.log(e)
-          setUser(null);
-        }
-      };
+  const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
 
-    useEffect (() => {
-        checkUser();
-    }, [])
+  // useEffect(() =>{
+  //     if(!getting){
+  //         console.log("Force updating after getting and Index = ", getting, user?.uid)
+  //         forceUpdate()
+  //     }
+  // }, [getting, user])
 
-    // useEffect (() => {
-    //     const listner = data => {
-    //         if (data.payload.event === "signIn" || data.payload.event === "signOut") {
-    //         checkUser();
-    //         }
-    //     }
-    //     Hub.listen("auth", listner)
-    // }, [])
+  const checkUser = async () => {
+    try {
+      const authUser = await auth().setPersistence(auth.Auth.Persistence.LOCAL).then(() => {
+        return auth().currentUser;
+      });
+      console.log("setting User")
+      setUser(authUser);
 
-    if (user === undefined){
-        return(
-            <View style = {{flex : 1, justifyContent : "center", alignItems : "center"}}>
-                <ActivityLoader></ActivityLoader>
-                <ActivityIndicator size= {50} color = "#16B3C0" />
-            </View>
-        )
+    } catch (e) {
+      console.log(e)
+      setUser(null);
     }
-    const userValidated = auth().currentUser
-    console.log("user validated is ", userValidated)
-    console.log("user ",user)
+  };
+
+  useEffect(() => {
+    // const userValidated = auth().currentUser
+    setUserValidated(auth().currentUser)
+    if (auth().currentUser) {
+      firestore()
+        .collection('users')
+        .doc(auth().currentUser?.uid)
+        .get()
+        .then(documentSnapshot => {
+          if (documentSnapshot.exists) {
+            const userData = documentSnapshot.data()
+            const userRole = userData.role
+            console.log(userData.role)
+            setUser({ ...auth().currentUser, ...userData })
+            setIsLoggedIn(true);
+          }
+        });
+    }
+
+  }, [])
+
+
+  console.log("user validated is ", user?.uid)
+
+  
+
+
+  // useEffect(() => {
+  //   checkUser();
+  //   const userValidated = auth().currentUser;
+
+  //   if (userValidated) {
+  //     const userId = userValidated.uid;
+
+  //     const cRef = firestore().collection('meet').doc(userId);
+  //     const subscribe = cRef.onSnapshot(snapshot => {
+  //       const data = snapshot.data();
+  //       // if there is an offer for chatid, set the getting call flag
+  //       if (data && data.offer) {
+  //         setGetting(data.caller);
+  //         console.log(data.caller);
+  //         setCaller(data.caller);
+  //       }
+  //     });
+
+  //     return () => {
+  //       subscribe();
+  //     };
+  //   }
+  // }, []);
+
+
+
+
+  // useEffect (() => {
+  //     const listner = data => {
+  //         if (data.payload.event === "signIn" || data.payload.event === "signOut") {
+  //         checkUser();
+  //         }
+  //     }
+  //     Hub.listen("auth", listner)
+  // }, [])
+
+  // if (user === undefined) {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+  //       <ActivityLoader></ActivityLoader>
+  //       <ActivityIndicator size={50} color="#16B3C0" />
+  //     </View>
+  //   )
+  // }
+
+
   return (
-    <UserContext.Provider value={{user, setUser}}>
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName = {userValidated ? "Home" : "Welcome"} >
-
+    <UserContext.Provider value={{ user, setUser, getting, setGetting, isLoggedIn, setIsLoggedIn, caller, setCaller }}>
+      <NavigationContainer>
+        { user? (getting?<VideoStack />:<AppStack />):
+          (<Stack.Navigator screenOptions={{ headerShown: false }} >
+          <Stack.Screen name='Welcome' component={WelcomeScreen} />
+          <Stack.Screen name='SignIn' component={SignInScreen} />
+          <Stack.Screen name='SignUp' component={SignUpScreen} />
+          <Stack.Screen name='ConfirmEmail' component={ConfirmEmailScreen} />
+          <Stack.Screen name='ForgotPassword' component={ForgotPasswordScreen} />
+          <Stack.Screen name='NewPaswword' component={NewPasswordScreen} />
+          </Stack.Navigator>)
         
-        <Stack.Screen name='Welcome' component={WelcomeScreen} />
-        <Stack.Screen name='SignIn' component={SignInScreen} />
-        <Stack.Screen name='Home' component={HomeScreen} />
-        <Stack.Screen name='Chat' component={ChatScreen} />
-        <Stack.Screen name='Profile' component={Profile} />
-        <Stack.Screen name='Detection' component={Detection} />
-
-        <Stack.Screen name='SignUp' component={SignUpScreen} />
-        <Stack.Screen name='ConfirmEmail' component={ConfirmEmailScreen} />
-        <Stack.Screen name='ForgotPassword' component={ForgotPasswordScreen} />
-        <Stack.Screen name='NewPaswword' component={NewPasswordScreen} />
-        <Stack.Screen name='DoctorHome' component={DoctorHome} />
-        <Stack.Screen name='DoctorDesk' component={DoctorDesk} />
-        <Stack.Screen name='EmotionEducation' component={EmotionEducation} />
-        <Stack.Screen name='AngryEmotionScreen' component={AngryEmotionScreen} />
-        <Stack.Screen name='MixEmotionScreen' component={MixEmotionScreen} />
-        <Stack.Screen name='DisgustEmotionScreen' component={DisgustEmotionScreen} />
-        <Stack.Screen name='FearEmotionScreen' component={FearEmotionScreen} />
-        <Stack.Screen name='HappyEmotionScreen' component={HappyEmotionScreen} />
-        <Stack.Screen name='SadEmotionScreen' component={SadEmotionScreen} />
-        <Stack.Screen name='GamesScreen' component={GamesScreen} />
-        <Stack.Screen name='UserAppointment' component={UserAppointment} />
-        <Stack.Screen name='Book Appointment' component={BookAppointment} />
-        <Stack.Screen name='AppointmentRequest' component={AppointmentRequest} />
-      </Stack.Navigator>
-    </NavigationContainer>
+          }
+      </NavigationContainer>
     </UserContext.Provider>
   )
 }

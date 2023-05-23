@@ -12,7 +12,7 @@ import {
     Image,
     Alert,
 } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import LinearGradient from 'react-native-linear-gradient';
 import auth from '@react-native-firebase/auth';
@@ -20,6 +20,7 @@ import firestore from '@react-native-firebase/firestore';
 import CustomButton from '../../components/CustomButton'
 import { FlatList } from 'react-native-gesture-handler';
 import { useForm } from 'react-hook-form'
+import UserContext from '../../Context/UserContext';
 
 const Profile = function ({ navigation }) {
     const [Name, setName] = useState('');
@@ -33,6 +34,7 @@ const Profile = function ({ navigation }) {
     const { control, handleSubmit, watch } = useForm();
     const [avatar, setAvatar] = useState("1");
     const [oldPassword, seOldPassword] = useState("");
+    const {setUser} = useContext(UserContext)
 
 
     // useEffect(() => {
@@ -73,8 +75,9 @@ const Profile = function ({ navigation }) {
         auth()
             .signOut()
             .then(() => {
+                setUser(null)
                 Alert.alert("Success  ✅", "Signed out SUCCESSFULLY!!!");
-                navigation.navigate('SignIn')
+                // navigation.navigate('SignIn')
             })
             .catch(error => {
                 if (error) {

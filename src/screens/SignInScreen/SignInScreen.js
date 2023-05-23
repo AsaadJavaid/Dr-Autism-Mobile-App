@@ -16,7 +16,7 @@ import {useContext} from "react";
 
 const SignInScreen = ({ navigation }) => {
     const { height } = useWindowDimensions();
-    const {setUser} = useContext(UserContext)
+    const {setUser, setIsLoggedIn} = useContext(UserContext)
     // const navigation = useNavigation();
     const [loding, setLoding] = useState(false);
 
@@ -80,21 +80,22 @@ const SignInScreen = ({ navigation }) => {
                             const userRole = userData.role
                             console.log(userData.role)
                             setUser({...auth().currentUser, ...userData})
-                            if (userRole == "Parent") {
-                                navigation.navigate('Home');
-                            }
-                            else {
-                                // const varified = documentSnapshot.data().isVarified
-                                navigation.navigate('DoctorHome');
-                                // if (isVarified)
-                                // {
-                                // navigation.navigate('Welcome');
-                                // }
-                                // else
-                                // {
-                                //     alert("Doctor not varified")
-                                // }
-                            }
+                            setIsLoggedIn(true);
+                            // if (userRole == "Parent") {
+                            //     navigation.navigate('Home');
+                            // }
+                            // else {
+                            //     // const varified = documentSnapshot.data().isVarified
+                            //     navigation.navigate('DoctorHome');
+                            //     // if (isVarified)
+                            //     // {
+                            //     // navigation.navigate('Welcome');
+                            //     // }
+                            //     // else
+                            //     // {
+                            //     //     alert("Doctor not varified")
+                            //     // }
+                            // }
                             // navigation.navigate('Home');
                             // setName(documentSnapshot.data().username);
                             // setPassword(documentSnapshot.data().password);
