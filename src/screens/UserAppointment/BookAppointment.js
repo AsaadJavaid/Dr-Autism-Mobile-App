@@ -26,7 +26,7 @@ const BookAppointment = ({navigation, route}) => {
 
   const HandleAppointment = async () => {
 
-
+    Alert.alert("Success  ✅","Your Appointment has been booked successfully. you will recieve Video call at your selected time. be online!!!!!")
     const date = new Date(selectedDate)
     date.setUTCHours(0,0,0,0);
     const appointmentDetails = {
